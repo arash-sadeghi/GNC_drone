@@ -23,10 +23,11 @@ class Navigator(Basic_Movements):
 		self.position = Pose()
 
 	def PoseCallback(self,data):
-		orientation_list = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
-		(roll, pitch, yaw) = euler_from_quaternion(orientation_list)
-		self.yaw = yaw/np.pi*180 #! we get yaw in degrees
-		self.position = data.position
+		# orientation_list = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
+		# (roll, pitch, yaw) = euler_from_quaternion(orientation_list)
+		# self.yaw = yaw/np.pi*180 #! we get yaw in degrees
+		# self.position = data.position
+		pass
 
 	def LaserScanCallback(self,data):
 		pass
@@ -58,7 +59,8 @@ class Navigator(Basic_Movements):
 		print("[+] Elevated {} from {} to {}".format(height , init_z , self.position.z))
 
 	def loop(self):
-				self.move_forward()
+		# self.move_forward()
+		pass
 
 if __name__=="__main__":
 	print("[+] navigator started")
@@ -69,7 +71,7 @@ if __name__=="__main__":
 	nav.takeoff()
 	rospy.sleep(5) #! to avoid taking ground as collision
 	print("[+] collision avoidance loop started")
-	nav.elevate(1)
-	nav.loop()
+	# nav.elevate(1)
+	# nav.loop()
 	rospy.spin()
 			
