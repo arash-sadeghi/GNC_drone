@@ -15,6 +15,12 @@ find_package(catkin REQUIRED COMPONENTS
     message_generation
     gazebo_ros
     gazebo_plugins
+
+    geometry_msgs
+    move_base
+    nav_msgs
+    tf
+    tf2_ros
     )
 
 find_package(gazebo REQUIRED)

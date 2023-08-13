@@ -3,7 +3,7 @@
     <env name="GAZEBO_PLUGIN_PATH" value="$GAZEBO_PLUGIN_PATH:$(find sjtu_drone)/plugins"/> <!--add custom plugins for drone to gazebo plugin path-->
     <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find sjtu_drone)/meshes"/>
 
-    <!-- <arg name="world_name" value="$(find sjtu_drone)/world/from_pc.world"/> -->
+    <arg name="world_name" value="$(find sjtu_drone)/world/empty_cafe.world"/>
     <arg name="paused" value="false"/>
     <arg name="verbose" value="true"/>
     <arg name="gui" value="true"/>
@@ -11,7 +11,7 @@
     <!-- launch the custom world -->
     <include file="$(find gazebo_ros)/launch/empty_world.launch" >
             <arg name="paused" value="$(arg paused)"/>
-            <!-- <arg name="world_name" value="$(arg world_name)"/> -->
+            <arg name="world_name" value="$(arg world_name)"/>
             <arg name="verbose" value="$(arg verbose)"/>
             <arg name="gui" value="$(arg gui)"/>
     </include>
@@ -20,7 +20,7 @@
     <arg name="robot_name" value="sjtu_drone"/>
     <arg name="x" default="0.0" />
     <arg name="y" default="0.0" />
-    <arg name="z" default="0.0" />
+    <arg name="z" default="1.0" />
     <arg name="roll" default="0.0"/>
     <arg name="pitch" default="0.0"/>
     <arg name="yaw" default="0.0"/>
@@ -43,7 +43,14 @@
 
     <!-- start keyboard control ui -->
     <!-- <node name="drone_keyboard" pkg="sjtu_drone" type="teleop_twist_keyboard.py" launch-prefix="xterm -hold -e"/>  -->
+
     <node name="drone_navigator" pkg="sjtu_drone" type="drone_navigator.py" output="screen"/> 
+
+    <arg name="map_file" default="$(find turtlebot_navigation_gazebo)/maps/my_map.yaml"/>
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+    <node name="pos_publisher" pkg="sjtu_drone" type="pos_publisher.py"  output="screen"/>
+    <node name="astar" pkg="sjtu_drone" type="astar.py" output="screen"/>
 
     <!-- Send robot states to tf 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">

@@ -1,21 +1,18 @@
+# Insall
+- [source](https://automaticaddison.com/how-to-set-up-the-ros-navigation-stack-on-a-robot/)
+```
+sudo apt-get install ros-noetic-navigation
+```
+- map and navigation servers [link](https://answers.ros.org/question/244237/rosrun-map_server-map_server-couldnt-find-executable/)
 # Drone simulation
 - inspired by [link](https://github.com/NovoG93/sjtu-drone)
-# Step
-- [ ] empty env
-    - [ ] delete world files and stay with a default world
-- [ ] put camera to drone
-    - [ ] edit sdf model
-- [ ] put a QR code in the environment
-    - [ ] needs a bit of research. put QR code on a plane or on a side of a cube
-- [ ] detect QR code and print its relative position
-    - [ ] run help script
-- [ ] write a motion control to follow QR code and keep a certain distance from it.
-    - [ ] set a target position and rotation from middle of QR code.
-    - [ ] give target position and rotation to drone and tell it to go there. organize it in two PID problems: position and rotation.
-    - [ ] first move QR without rotating
-    - [ ] then just rotate QR
-    - [ ] then mix
-- [ ] for result, put drone in different angles and positions and measure PnP error.
+# TOdo
+- [ ] float occupancy map before feeding it to A* to maintain a safe distance from obstacles
+- [ ] give A* path to path optimizer
+- [ ] give path optimizer to LQR or time varying LQR
+- [ ] write non-linear version of the system
+- [ ] do it on a different map and create map for it (we can do it for coridors in construct sim)
+- [ ] do 3d A*
 # ROS Package Details
 
 I created this package by editing the sjtu Drone simulation in GitHub repo [link](https://github.com/NovoG93/sjtu-drone). The original repo had some bugs. After fixing them, I added a laser sensor to the drone and implemented ```drone_navigator``` node. I tested this package on my system, which is utilized with **ROS Noetic (Ubuntu 20.04)** and **Gazebo version 11.10.2**.
