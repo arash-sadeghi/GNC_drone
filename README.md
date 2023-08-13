@@ -4,6 +4,7 @@
 sudo apt-get install ros-noetic-navigation
 ```
 - map and navigation servers [link](https://answers.ros.org/question/244237/rosrun-map_server-map_server-couldnt-find-executable/)
+- pydrake [install](https://drake.mit.edu/pip.html#stable-releases)
 # Drone simulation
 - inspired by [link](https://github.com/NovoG93/sjtu-drone)
 # TOdo
