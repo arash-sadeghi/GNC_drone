@@ -53,6 +53,9 @@
     <node name="astar" pkg="sjtu_drone" type="astar.py" output="screen"/>
     <node name="path_optimizer" pkg="sjtu_drone" type="path_optimizer.py" output="screen"/>
 
+    <node name="map_expander" pkg="sjtu_drone" type="map_expander.py" output="screen"/>
+    <node name="map_viz" pkg="sjtu_drone" type="map_viz.py" output="screen"/>
+
     <!-- Send robot states to tf 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
         <remap from="joint_states" to="/$(arg robot_name)/joint_states" />

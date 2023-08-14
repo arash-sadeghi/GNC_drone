@@ -17,14 +17,12 @@ def path_callback(msg):
     init_path = np.array(init_path).squeeze() 
     # set_trace()
     x_sol, u_sol, X_ref, U_ref, T_ref= dircol_example_pend(init_path)    
-    print(f"optimized path {U_ref}")
     
 
 if __name__ == '__main__':
     rospy.init_node('path_optimizer')
     path_sub = rospy.Subscriber('/path', PoseArray, path_callback)
     print("[++] path optimizer started")
-
     # init_path = np.load("/home/arash/catkin_ws/src/GNC_drone_navigation/data/example_path.npy")
     # x_sol, u_sol, X_ref, U_ref, T_ref= dircol_example_pend(init_path*0.05)
     # dirtran_example(init_path)
