@@ -14,7 +14,8 @@ from pydrake.all import (
 )
 import matplotlib.pyplot as plt
 import numpy as np
-
+from CONST import CONST_class 
+from pdb import set_trace
 def dircol_example_pend(init_path):
 # 1. System model definition----------------------------------
 
@@ -120,40 +121,42 @@ def dircol_example_pend(init_path):
     X_knots = x_sol.vector_values(T_knots)
     U_knots = u_sol.vector_values(T_knots)
 
-    # #plot the phase plane plot
-    # fig, ax = plt.subplots()
-    # ax.set_xlabel("$x1$")
-    # ax.set_ylabel("$x2$")
-    # ax.plot(X_ref[0, :], X_ref[1, :],'-')
-    # ax.plot(X_knots[0,:], X_knots[1,:],'x')
-    # ax.plot(init_path[:,0], init_path[:,1],'o',label = "init_path")
+    #plot the phase plane plot
+    fig, ax = plt.subplots()
+    ax.set_xlabel("$x1$")
+    ax.set_ylabel("$x2$")
+    ax.plot(X_ref[0, :], X_ref[1, :],'-')
+    ax.plot(X_knots[0,:], X_knots[1,:],'x')
+    ax.plot(init_path[:,0], init_path[:,1],'o',label = "init_path")
+    plt.savefig(CONST_class.data_folder_path + "/optimized_path_on_ros_run.png")
 
-    # # plt.show()
 
-    # #plot the state and input trajectory
-    # fig, ax = plt.subplots(2, 1)
-    # fig.tight_layout(pad=2.0)
-    # ax[0].plot(T_knots, X_knots.T, "x")
-    # ax[0].plot(T_ref, X_ref[0, :], "-")
-    # ax[0].plot(T_ref, X_ref[1, :], "-")
-    # ax[0].set_xlabel("t")
-    # ax[0].set_ylabel("x")
+    #plot the state and input trajectory
+    fig, ax = plt.subplots(2, 1)
+    fig.tight_layout(pad=2.0)
+    ax[0].plot(T_knots, X_knots.T, "x")
+    ax[0].plot(T_ref, X_ref[0, :], "-")
+    ax[0].plot(T_ref, X_ref[1, :], "-")
+    ax[0].set_xlabel("t")
+    ax[0].set_ylabel("x")
 
-    # ax[1].plot(T_knots, U_knots.T, "x")
-    # ax[1].plot(T_ref, U_ref.T, "-")
-    # ax[1].set_xlabel("t")
-    # ax[1].set_ylabel("u")
+    ax[1].plot(T_knots, U_knots.T, "x")
+    ax[1].plot(T_ref, U_ref.T, "-")
+    ax[1].set_xlabel("t")
+    ax[1].set_ylabel("u")
 
     # plt.show()
-    # plt.legend()
-    # # make the solution as a list for animation
-    # X=[];U=[];T=[]
-    # for t in np.linspace(u_sol.start_time(), u_sol.end_time(), 1000):
-    # T.append(t)
-    # X.append(x_sol.value(t)[:,0])
-    # U.append(u_sol.value(t)[:,0])
+    plt.legend()
+    plt.savefig(CONST_class.data_folder_path + "/optimized_path_on_ros_run_v_t.png")
+    # set_trace()
+    
+    # # for point in 
+    
+    # np.save(CONST_class.data_folder_path+"/u_sol.npy",u_sol)
+    # np.save(CONST_class.data_folder_path + "/x_sol.npy",x_sol)
 
-    # dt = T[1]
-    # param = np.array([m,L,g,dt])
-    # anim = gnc.animate_isl_pendulum(X,U,T,param,20,3) # this is animating the reference trajectory
+    # np.save(CONST_class.data_folder_path + "/T_ref.npy",T_ref)
+    # np.save(CONST_class.data_folder_path + "/X_ref.npy",X_ref)
+    # np.save(CONST_class.data_folder_path + "/U_ref.npy",U_ref)
+
     return x_sol, u_sol, X_ref, U_ref, T_ref

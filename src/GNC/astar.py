@@ -28,7 +28,9 @@ class AStarPathPlanner:
 	def start_callback(self, msg):
 		if self.map is None:
 			return 
-		self.start = (int(msg.position.x/self.map.info.resolution), int(msg.position.y/self.map.info.resolution))
+		x = msg.position.x- self.map.info.origin.position.x
+		y = msg.position.y- self.map.info.origin.position.y
+		self.start = (int(x/self.map.info.resolution) , int(y/self.map.info.resolution))
 
 	def goal_callback(self, msg):
 		if self.map is None:
@@ -99,8 +101,8 @@ class AStarPathPlanner:
 		path_msg = PoseArray()
 		for node in path:
 			tmp = Pose()
-			tmp.position.x = node[0]*self.map.info.resolution
-			tmp.position.y = node[1]*self.map.info.resolution
+			tmp.position.x = node[0]*self.map.info.resolution + self.map.info.origin.position.x
+			tmp.position.y = node[1]*self.map.info.resolution + self.map.info.origin.position.y
 			path_msg.poses.append(tmp)
 		# print(f"path calculated and published succesfully {path_msg}")	
 		# print(f"path calculated and published succesfully")	

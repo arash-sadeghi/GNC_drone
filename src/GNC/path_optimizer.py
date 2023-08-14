@@ -17,7 +17,8 @@ def path_callback(msg):
     init_path = np.array(init_path).squeeze() 
     # set_trace()
     x_sol, u_sol, X_ref, U_ref, T_ref= dircol_example_pend(init_path)    
-    print(f"optimized path {X_ref}")
+    print(f"optimized path {U_ref}")
+    
 
 if __name__ == '__main__':
     rospy.init_node('path_optimizer')
