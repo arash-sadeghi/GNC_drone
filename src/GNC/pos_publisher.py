@@ -13,8 +13,12 @@ if __name__ == '__main__':
     g_pub = rospy.Publisher('/goal_position', PoseStamped, queue_size=1)
 
     g = PoseStamped()
-    g.pose.position.x = 13
-    g.pose.position.y = 20
+    2.7 
+    7.6
+    
+    
+    g.pose.position.x = 15.4 + (-3.6)#2.7
+    g.pose.position.y = 13.8 + (-3)#7.6
 
     x = Int32MultiArray()
 
