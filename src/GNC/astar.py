@@ -17,7 +17,7 @@ class AStarPathPlanner:
 		self.start = None
 		self.goal = None
 
-		self.map_sub = rospy.Subscriber('/map', OccupancyGrid, self.map_callback)
+		self.map_sub = rospy.Subscriber('/expanded_map', OccupancyGrid, self.map_callback)
 		self.start_sub = rospy.Subscriber('drone/gt_pose', Pose , self.start_callback )      
 		self.goal_sub = rospy.Subscriber('/goal_position', PoseStamped, self.goal_callback)
 		self.path_pub = rospy.Publisher('/path', PoseArray, queue_size=10)

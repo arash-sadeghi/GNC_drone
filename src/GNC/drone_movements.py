@@ -1,5 +1,6 @@
 from geometry_msgs.msg import Twist 
 from CONST import CONST_class
+from std_msgs.msg import Empty 
 
 class Basic_Movements: #* publishes twist message for called basic movement
 	def __init__(self,vel_pub,takeoff_pub,land_pub):
@@ -21,4 +22,4 @@ class Basic_Movements: #* publishes twist message for called basic movement
 		self.vel_pub.publish(self.twist)
 
 	def takeoff(self):	
-		self.takeoff_pub.publish(self.empty_msg)
+		self.takeoff_pub.publish(Empty())
