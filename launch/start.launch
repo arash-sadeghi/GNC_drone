@@ -18,8 +18,8 @@
 
     <arg name="sdf_robot_file" value="$(find sjtu_drone)/models/sjtu_drone/sjtu_drone.sdf"/>
     <arg name="robot_name" value="sjtu_drone"/>
-    <arg name="x" default="0.0" />
-    <arg name="y" default="0.0" />
+    <arg name="x" default="15.0" />
+    <arg name="y" default="15.0" />
     <arg name="z" default="1.0" />
     <arg name="roll" default="0.0"/>
     <arg name="pitch" default="0.0"/>
@@ -51,6 +51,7 @@
 
     <node name="pos_publisher" pkg="sjtu_drone" type="pos_publisher.py"  output="screen"/>
     <node name="astar" pkg="sjtu_drone" type="astar.py" output="screen"/>
+    <node name="path_optimizer" pkg="sjtu_drone" type="path_optimizer.py" output="screen"/>
 
     <!-- Send robot states to tf 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
