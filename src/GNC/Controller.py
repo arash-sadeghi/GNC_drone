@@ -42,7 +42,7 @@ class LQR:
 		self.K = K
 		print(f"K {K}")
 
-	def get_control_input(self):
+	def publish_cmd_vel(self):
 		if self.Xref is None or self.K is None or self.X is None:
 			return
 
@@ -66,4 +66,4 @@ if __name__=="__main__":
 	lqr = LQR()
 	lqr.calculate_K()
 	while not rospy.is_shutdown():
-		lqr.get_control_input()
+		lqr.publish_cmd_vel()

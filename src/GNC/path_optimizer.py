@@ -9,14 +9,18 @@ from std_msgs.msg import Empty
 from drone_movements import Basic_Movements
 from tf.transformations import euler_from_quaternion,quaternion_from_euler
 
-class Yaw_aligner:
+def dist(p1,p2):
+	return np.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
+class Position_handler:
 	def __init__(self) -> None:
 		rospy.Subscriber('drone/gt_pose', Pose , self.pose_callback )
 		self.yaw = 0
+		self.position = [0,0]
 
 	def pose_callback(self,data):
 		orientation_list = [data.orientation.x, data.orientation.y, data.orientation.z, data.orientation.w]
 		(roll, pitch, self.yaw) = euler_from_quaternion(orientation_list)
+		self.position = np.array([data.position.x , data.position.y]).squeeze()
 
 	def align_yaw(self):
 		e = -1* self.yaw
@@ -25,16 +29,15 @@ class Yaw_aligner:
 class Optimizer(Basic_Movements):
 	def __init__(self):
 		rospy.init_node('path_optimizer')
-		self.vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
+		self.xref_pub = rospy.Publisher('drone/Xref', Pose, queue_size = 1)
 		self.takeoff_pub = rospy.Publisher('drone/takeoff', Empty, queue_size = 1)
-		self.land_pub = rospy.Publisher('drone/land', Empty, queue_size = 1)
-		super().__init__(self.vel_pub , self.takeoff_pub , self.land_pub)
+		super().__init__(None , self.takeoff_pub , None)
 		rospy.sleep(1) #! without sleep here, drone wont take off
 		print("[+] taking off")
 		self.takeoff()
 		rospy.sleep(5) #! to avoid taking ground as collision
 		path_sub = rospy.Subscriber('/path', PoseArray, self.path_callback)
-		self.yaw_aligner = Yaw_aligner()
+		self.yaw_aligner = Position_handler()
 		self.finished = False
 
 	def path_callback(self,msg):
@@ -50,22 +53,22 @@ class Optimizer(Basic_Movements):
 		init_path = np.array(init_path).squeeze() 
 		# set_trace()
 		x_sol, u_sol, X_ref, U_ref, T_ref= dircol_example_pend(init_path)    
-		start_time = rospy.Time.now().to_sec()
-		t = 0
-		
-		# print(f"time dur {rospy.Time.now().to_sec()} ",type(rospy.Time.now().to_sec()) , T_ref[-1] , type(T_ref[-1]))
-		while T_ref[-1] - t >= 0:
-			t = rospy.Time.now().to_sec() - start_time
-			vel = Twist()
-			control_input = u_sol.vector_values([t])
-			vel.linear.x =  control_input[0][0]
-			vel.linear.y =  control_input[1][0]
-			vel.angular.z = self.yaw_aligner.align_yaw()
-			self.vel_pub.publish(vel)
-			print(f"time dur {t} u {u_sol.vector_values([t])} published {vel}")
-		self.stop()
+
+		for i in range(len(X_ref[0,:])):
+
+			x_ref = np.array([X_ref[0,i] , X_ref[1,i]])
+			print(f"[optmizer] publishing xref {x_ref}")
+			while dist(x_ref , self.yaw_aligner.position) > 0.1:
+				tmp = Pose()
+				tmp.position.x = x_ref[0]
+				tmp.position.y = x_ref[1]
+				tmp.position.z = 1			
+				self.xref_pub.publish(tmp)
+
+
 		print("reached destination")
 		self.finished = True
+
 if __name__ == '__main__':
 	print("[++] path optimizer started")
 	opt = Optimizer()

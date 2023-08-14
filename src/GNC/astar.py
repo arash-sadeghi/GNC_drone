@@ -42,6 +42,7 @@ class AStarPathPlanner:
 
 	def astar(self):
 		if self.map is None or self.start is None or self.goal is None:
+			print("[astar] topics are empty ")
 			return []
 		open_heap = [(0, self.start)]
 		came_from = {}
@@ -73,7 +74,7 @@ class AStarPathPlanner:
 					if neighbor not in [node for _, node in open_heap]:
 						heapq.heappush(open_heap, (f_scores[neighbor], neighbor))
 
-		print(f"path not found from {self.start} to {self.goal}")
+		print(f"[astar] path not found from {self.start} to {self.goal}")
 		return []
 
 	def get_nodes(self):
@@ -105,7 +106,7 @@ class AStarPathPlanner:
 			tmp.position.y = node[1]*self.map.info.resolution + self.map.info.origin.position.y
 			path_msg.poses.append(tmp)
 		# print(f"path calculated and published succesfully {path_msg}")	
-		# print(f"path calculated and published succesfully")	
+		print(f"[astar] path calculated and published succesfully")	
 
 		self.path_pub.publish(path_msg)
 
