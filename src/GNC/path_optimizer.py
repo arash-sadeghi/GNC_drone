@@ -42,6 +42,8 @@ def dircol_example_pend(init_path):
 
     # 2. Mathematical program-------------------------------------------
     N = len(init_path)
+    # N = 10 #* 40 is the edge
+
     max_dt = 0.5
     N * max_dt
     dircol = DirectCollocation(
@@ -57,14 +59,14 @@ def dircol_example_pend(init_path):
     dircol.AddEqualTimeIntervalsConstraints()
 
     # set input limits at each knot point - dircol has to map it to the mathematical program
-    input_limit = [100 , 100]  # m/s.
+    input_limit = [10 , 10]  # m/s.
     
     u = dircol.input()
     dircol.AddConstraintToAllKnotPoints(-input_limit[0] <= u[0])
     dircol.AddConstraintToAllKnotPoints(u[0] <= input_limit[0])
 
-    dircol.AddConstraintToAllKnotPoints(-input_limit[0] <= u[0])
-    dircol.AddConstraintToAllKnotPoints(u[0] <= input_limit[0])
+    dircol.AddConstraintToAllKnotPoints(-input_limit[1] <= u[1])
+    dircol.AddConstraintToAllKnotPoints(u[1] <= input_limit[1])
 
     # set intial and final state - this is doen on the mathmaticla program
     initial_state = init_path[0]
@@ -74,19 +76,24 @@ def dircol_example_pend(init_path):
 
     # optional -  padd running and terminal costs
     R = 10  # Cost on input "effort".
-    #dircol.AddRunningCost(R * u[0] ** 2)
+    dircol.AddRunningCost(R * u[0] ** 2)
+    dircol.AddRunningCost(R * u[1] ** 2)
+
     dircol.AddFinalCost(dircol.time())
 
     # set the trajectory to optimze -  initial condition
-    # initial_x_trajectory = PiecewisePolynomial.FirstOrderHold([0.0, 100.0], [initial_state, final_state])
+    # initial_x_trajectory = PiecewisePolynomial.FirstOrderHold([0.0, 1], [initial_state, final_state])
     
-    # time = np.arange(0,max_dt*len(init_path),max_dt)
-    time = np.linspace(0,max_dt*len(init_path)*2,len(init_path))
+    # time = np.linspace(0,max_dt*len(init_path)*2,len(init_path))
+    # initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(time, init_path.T)
+    # dircol.SetInitialTrajectory(PiecewisePolynomial(), initial_x_trajectory)
 
-    initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(time, init_path.T)
 
-    print("initial_x_trajectory---> ",initial_x_trajectory)
-    dircol.SetInitialTrajectory(PiecewisePolynomial(), initial_x_trajectory)
+    # x = dircol.state()
+    # # Adding constraints to enforce specific points to be equal to px and py
+    # for i, point in enumerate(init_path):
+    #     prog.AddConstraint(px == point[0]).only_for([i])
+    #     prog.AddConstraint(py == point[1]).only_for([i])
 
     # 3. Solve-----------------------------------------------
     result = Solve(prog)
