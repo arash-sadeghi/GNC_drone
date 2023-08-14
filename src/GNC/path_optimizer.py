@@ -16,7 +16,6 @@ from pydrake.all import (
     PiecewisePolynomial,
 )
 
-
 def dircol_example_pend(init_path):
 # 1. System model definition----------------------------------
 
@@ -41,7 +40,7 @@ def dircol_example_pend(init_path):
     context = pend.CreateDefaultContext()
 
     # 2. Mathematical program-------------------------------------------
-    N = len(init_path)
+    N = len(init_path)//2 #! decreasing this will cause smoother path
     # N = 10 #* 40 is the edge
 
     max_dt = 0.5
@@ -75,25 +74,32 @@ def dircol_example_pend(init_path):
     prog.AddBoundingBoxConstraint(final_state,final_state,dircol.final_state())
 
     # optional -  padd running and terminal costs
-    R = 10  # Cost on input "effort".
-    dircol.AddRunningCost(R * u[0] ** 2)
-    dircol.AddRunningCost(R * u[1] ** 2)
+    R = 2  # Cost on input "effort".
+    # dircol.AddRunningCost(u[0]**2/2)
+    # dircol.AddRunningCost(u[1]**2/2)
 
-    dircol.AddFinalCost(dircol.time())
+    # dircol.AddFinalCost(dircol.time()) #! main cause of deviation from initial path
 
     # set the trajectory to optimze -  initial condition
     # initial_x_trajectory = PiecewisePolynomial.FirstOrderHold([0.0, 1], [initial_state, final_state])
     
-    # time = np.linspace(0,max_dt*len(init_path)*2,len(init_path))
-    # initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(time, init_path.T)
-    # dircol.SetInitialTrajectory(PiecewisePolynomial(), initial_x_trajectory)
+    time = np.linspace(0,max_dt*len(init_path)*2,len(init_path))
+    initial_x_trajectory = PiecewisePolynomial.FirstOrderHold(time, init_path.T)
+    dircol.SetInitialTrajectory(PiecewisePolynomial(), initial_x_trajectory)
 
 
-    # x = dircol.state()
-    # # Adding constraints to enforce specific points to be equal to px and py
+    x = dircol.state()
+    # Adding constraints to enforce specific points to be equal to px and py
     # for i, point in enumerate(init_path):
     #     prog.AddConstraint(px == point[0]).only_for([i])
     #     prog.AddConstraint(py == point[1]).only_for([i])
+
+    # Add a cost term to penalize deviation from the initial trajectory
+    # cost = 0
+    # for k in range(N):
+    #     state_deviation = x[:, k] - initial_x_trajectory.value(initial_x_trajectory.end_time())
+    #     cost += state_deviation.dot(state_deviation)
+    # prog.AddQuadraticErrorCost(Q=1.0, x=x, x_desired=initial_x_trajectory.value(initial_x_trajectory.end_time()))
 
     # 3. Solve-----------------------------------------------
     result = Solve(prog)
@@ -154,6 +160,9 @@ def dircol_example_pend(init_path):
     return x_sol, u_sol, X_ref, U_ref, T_ref
 
 
+
+
 if __name__ == '__main__':
     init_path = np.load("/home/arash/catkin_ws/src/GNC_drone_navigation/data/example_path.npy")
     x_sol, u_sol, X_ref, U_ref, T_ref= dircol_example_pend(init_path)
+    # dirtran_example(init_path)
