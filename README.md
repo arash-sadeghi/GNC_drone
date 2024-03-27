@@ -7,13 +7,7 @@ sudo apt-get install ros-noetic-navigation
 - pydrake [install](https://drake.mit.edu/pip.html#stable-releases)
 # Drone simulation
 - inspired by [link](https://github.com/NovoG93/sjtu-drone)
-# TOdo
-- [ ] float occupancy map before feeding it to A* to maintain a safe distance from obstacles
-- [ ] give A* path to path optimizer
-- [ ] give path optimizer to LQR or time varying LQR
-- [ ] write non-linear version of the system
-- [ ] do it on a different map and create map for it (we can do it for coridors in construct sim)
-- [ ] do 3d A*
+
 # ROS Package Details
 
 I created this package by editing the sjtu Drone simulation in GitHub repo [link](https://github.com/NovoG93/sjtu-drone). The original repo had some bugs. After fixing them, I added a laser sensor to the drone and implemented ```drone_navigator``` node. I tested this package on my system, which is utilized with **ROS Noetic (Ubuntu 20.04)** and **Gazebo version 11.10.2**.
